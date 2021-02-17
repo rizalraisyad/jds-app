@@ -5,7 +5,7 @@ import InputPage from "./page/InputPage";
 function App() {
   return (
     <>
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" style={{border:"1px solid #000000"}}>
         <InputPage />
       </Container>
     </>

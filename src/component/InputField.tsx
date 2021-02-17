@@ -1,22 +1,96 @@
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { InputTextParam, InputSelectParam } from "../type/TypeDef";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { relative } from "path";
 
 export const InputField = (param: InputTextParam) => {
-  return (
-    <>
-      <TextField
-        id={String(param.id)}
-        type={String(param.type)}
-        label={param.label}
-        variant="outlined"
-      />
-    </>
-  );
+  if(param.type!=="file"){
+    if(param.max>0 || param.mininput!==0){
+      return (
+        <>
+        <InputLabel id="demo-simple-select-label" style={{display:String(param.show)}}>{param.headLabel}</InputLabel>
+          <TextField 
+            value={param.value}
+            required={param.req}
+            style={{display:String(param.show)}}
+            id={String(param.id)}
+            type={String(param.type)}
+            label={param.label}
+            variant="outlined"
+            inputProps={{ maxLength: param.max ,min: param.mininput }}
+            onChange={(e: any)=>{
+              param.funcUpdate(e.target);
+            }}
+            disabled={param.disable}
+          />
+        </>
+      );
+    }else{
+      return (
+        <>
+        <InputLabel id="demo-simple-select-label" style={{display:String(param.show)}}>{param.headLabel}</InputLabel>
+          <TextField 
+            value={param.value}
+            required={param.req}
+            style={{display:String(param.show)}}
+            id={String(param.id)}
+            type={String(param.type)}
+            label={param.label}
+            variant="outlined"
+            onChange={(e: any)=>{
+              param.funcUpdate(e.target);
+            }}
+            disabled={param.disable}
+          />
+        </>
+      );
+    }
+  }else{
+    if(param.value===""){
+      return (
+        <>
+        <InputLabel style={{display:String(param.show)}}>{param.headLabel}</InputLabel>
+          <TextField
+            value={param.value}
+            required={param.req}
+            style={{display:String(param.show)}}
+            id={String(param.id)}
+            type={String(param.type)}
+            variant="outlined"
+            inputProps={{ accept: param.accept }}
+            onChange={(e: any)=>{
+              param.funcUpdate(e.target.files[0]);
+            }}
+            disabled={param.disable}
+          />
+        </>
+      );
+    }else{
+      return (
+        <>
+        <InputLabel style={{display:String(param.show)}}>{param.headLabel}</InputLabel>
+          <TextField
+            required={param.req}
+            style={{display:String(param.show)}}
+            id={String(param.id)}
+            type={String(param.type)}
+            variant="outlined"
+            inputProps={{ accept: param.accept }}
+            onChange={(e: any)=>{
+              param.funcUpdate(e.target.files[0]);
+            }}
+            disabled={param.disable}
+          />
+        </>
+      );
+    }
+    
+  }
+  
+
+  
 };
 
 export const SelectField = ({
@@ -25,21 +99,26 @@ export const SelectField = ({
   idSel,
   label,
   desc,
+  disable,
 }: InputSelectParam) => {
   return (
     <>
-      <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+      <InputLabel >{label}</InputLabel>
       <Select
+        required
         labelId={String(label)}
         id={String(idSel)}
         value={value}
         onChange={(e) => {
           funcChange(String(e.target.value));
         }}
+        disabled={disable}
       >
+        {/* default */}
+        <MenuItem disabled={true} value="">""</MenuItem>
         {desc &&
           desc.map((item: any) => {
-            return <MenuItem value={item.desc}>{item.desc}</MenuItem>;
+            return <MenuItem key={item.desc} value={item.desc}>{item.desc}</MenuItem>;
           })}
       </Select>
     </>
@@ -52,62 +131,30 @@ export const SelectFieldWDesc = ({
   idSel,
   label,
   desc,
+  disable
 }: InputSelectParam) => {
-  const [hide, sethide] = useState("none");
-  const validate = (e: Number) => {
-    console.log(e);
-    if (e == 0) {
-      // return (
-      //   <TextField
-      //     id={String(idSel)}
-      //     type="text"
-      //     label={label}
-      //     variant="outlined"
-      //     onChange={(e) => {
-      //       funcChange(String(e.target.value));
-      //     }}
-      //   />
-      // );
-      sethide("block");
-    } else {
-      // eslint-disable-next-line array-callback-return
-      sethide("none");
-      desc.map((item: any) => {
-        if (e === item.value) {
-          console.log(item.desc);
-          funcChange(String(item.desc));
-        }
-      });
-    }
-  };
   return (
     <>
-      <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+      <InputLabel >{label}</InputLabel>
       <Select
+        required
         labelId={String(label)}
         id={String(idSel)}
         value={value}
-        onChange={(e) => {
-          // console.log(e.target.value);
-          validate(Number(e.target.value));
-        }}
-      >
-        {desc &&
-          desc.map((item: any) => {
-            return <MenuItem value={item.value}>{item.desc}</MenuItem>;
-          })}
-      </Select>
-      <TextField
-        style={{ display: hide, position: "relative", width: "100%" }}
-        id={String(idSel)}
-        type="text"
-        label={label}
-        variant="outlined"
-        value={value}
-        onChange={(e) => {
+        onChange={(e : any) => {
+          // console.log(e.target.value.desc);
+          // const item = e.target.value;
           funcChange(String(e.target.value));
         }}
-      />
+        disabled={disable}
+      >
+        {/* default */}
+        <MenuItem disabled={true} value=""></MenuItem>
+        {desc.length > 0 &&
+          desc.map((item: any) => {
+            return <MenuItem key={item.value} value={item.desc}>{item.desc}</MenuItem>;
+          })}
+      </Select>
     </>
   );
 };

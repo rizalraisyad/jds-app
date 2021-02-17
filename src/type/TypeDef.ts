@@ -2,6 +2,15 @@ export type InputTextParam = {
   type: String;
   id: String;
   label: String;
+  show: String;
+  req: boolean;
+  max: number;
+  headLabel: String;
+  accept: String
+  funcUpdate: (val: String) => void;
+  value: any;
+  mininput: number;
+  disable: boolean;
 };
 
 export type InputSelectParam = {
@@ -10,4 +19,5 @@ export type InputSelectParam = {
   idSel: String;
   label: String;
   desc: any;
+  disable: boolean;
 };
