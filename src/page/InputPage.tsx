@@ -114,6 +114,8 @@ const InputPage = () => {
   };
   const onSubmitForm = (e: any) =>{
     setDisable(true);
+    
+
     if(checkisi() === true){
       const random = Math.floor(Math.random() * 2) + 1;
       console.log("random dari bilangan 1 - 2 = " +random)
@@ -125,6 +127,13 @@ const InputPage = () => {
           alert("Submit Sukses")
           e.preventDefault();
         }
+        const detail = [];
+        detail.push(state);
+        detail.push(JenisKelamin);
+        detail.push(isiAlasan);
+        detail.push(FotoKTP);
+        detail.push(FotoKK);
+        console.log(detail);
         setDisable(false)
       }, 1500);
       
